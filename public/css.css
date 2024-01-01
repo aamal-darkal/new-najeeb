@@ -1,0 +1,64 @@
+.calendar {
+    font-family: Arial, sans-serif;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 20px;
+    margin-top: 50px;
+}
+
+.month {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.weekdays {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: space-between;
+}
+
+.weekdays li {
+    width: 14.28%;
+    text-align: center;
+}
+
+.days {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.days li {
+    width: 14.28%;
+    height: 100px;
+    border: 1px solid #ccc;
+    text-align: center;
+    line-height: 100px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+}
+
+.days li:hover {
+    background-color: #f5f5f5;
+    cursor: pointer;
+}
+
+.days li:nth-child(6),
+.days li:nth-child(7),
+.days li:nth-child(8),
+.days li:nth-child(13),
+.days li:nth-child(14),
+.days li:nth-child(15),
+.days li:nth-child(20),
+.days li:nth-child(21),
+.days li:nth-child(22),
+.days li:nth-child(27),
+.days li:nth-child(28),
+
+
+
