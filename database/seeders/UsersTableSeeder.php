@@ -15,13 +15,20 @@ class UsersTableSeeder extends Seeder
      */
     public function run(): void
     {
-        $admin = [
-            'user_name' => 'Admin',
-            'password' => Hash::make('najFor@llStudents'),
-            'role' => 'admin',
-            'token_birth' => Carbon::now(),
-            'remember_token' => null,
+        $users = [
+            [
+                'id' => 1,
+                'mobile' => 'admin',
+                'password' => Hash::make('najFor@llStudents'),
+                'role' => 'admin',
+            ],
+            [
+                'id' => 2,
+                'mobile' => '0932333090',
+                'password' => Hash::make('123456'),
+                'role' => 'student',
+            ]
         ];
-        User::create($admin);
+        User::insert($users);
     }
 }

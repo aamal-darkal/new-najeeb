@@ -13,12 +13,12 @@ return new class extends Migration
     {
         Schema::create('lectures', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('week_program_id')->constrained();
-            $table->foreignId('subject_id')->constrained(); //no need
             $table->string('name' ,100);
             $table->string('video_link');
-            $table->date('date');
-            $table->unsignedTinyInteger('duration');
+            $table->unsignedTinyInteger('seq');
+            $table->boolean('free')->default(false);
+            $table->foreignId('chapter_id')->constrained(); 
+            $table->unique('chapter_id' , 'seq');
             $table->timestamps();
         });
     }

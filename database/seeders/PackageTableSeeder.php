@@ -15,12 +15,12 @@ class PackageTableSeeder extends Seeder
     public function run(): void
     {
         $packages = [
-                [
-                    'name' => 'بكالوريا علمي',
-                    'start_date' => Carbon::now(),
-                    'end_date' => Carbon::now()->addMonth(),
-                    'image' => asset('images/packages/default.png'),
-                ],
+            [
+                'name' => 'بكالوريا علمي',
+                'start_date' => Carbon::now(),
+                'end_date' => Carbon::now()->addMonth(),
+                'image' => asset('images/packages/default.png'),
+            ],
             [
                 'name' => 'بكالوريا أدبي',
                 'start_date' => Carbon::now(),
@@ -34,8 +34,7 @@ class PackageTableSeeder extends Seeder
                 'image' => asset('images/packages/default.png'),
             ],
         ];
-        foreach ($packages as $package)
-        {
+        foreach ($packages as $package) {
             Package::create($package);
         }
     }

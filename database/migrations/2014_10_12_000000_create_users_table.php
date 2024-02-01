@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('user_name')->unique();
-            $table->string('role')->default('student');
+            $table->char('mobile', 10)->unique();            
             $table->string('password');
+            $table->enum('role' ,['temp' , 'admin' , 'student'])->default('temp');
             $table->dateTime('token_birth')->nullable();
             $table->string('fcm_token')->nullable();
             $table->rememberToken();

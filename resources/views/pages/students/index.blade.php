@@ -60,9 +60,8 @@
                                             class="btn w-xs px-1 py-0 m-0 text-xs _800 r-15" id="checkStatus"
                                             onclick="checkAllRecords()">Check All</button>
                                     </th>                                    
-                                    <th>User name</th>
+                                    <th>mobile</th>
                                     <th>full name</th>
-                                    <th>Phone</th>
                                     <th>start At</th>
                                     <th>Assigned subjects</th>
                                     <th>actions</th>
@@ -75,16 +74,15 @@
                                                     name="ids[]" value="{{ $student->id }}"><i
                                                     style="background-color: #f1efef"></i></label>
                                         </td>
-                                        <td>{{ $student->user->user_name }}</td>
+                                        <td>{{ $student->user->mobile }}</td>
                                         <td>{{ $student->first_name }} {{ $student->father_name }}
                                             {{ $student->last_name }}
                                         </td>
-                                        <td>{{ $student->phone }}</td>
                                         <td>{{ \Carbon\Carbon::create($student->created_at)->diffForHumans() }}</td>
 
 
                                         <td class="text-center">
-                                            <div class="btn-group dropdown">
+                                            {{-- <div class="btn-group dropdown">
                                                 <button class="btn white dropdown-toggle"
                                                     data-toggle="dropdown">{{ $student->subjects_count }}</button>
                                                 <div class="dropdown-menu dropdown-menu-scale">
@@ -114,7 +112,7 @@
                                                         @endforeach
                                                     </ul>
                                                 </div>
-                                            </div>
+                                            </div> --}}
                                         </td>
                                         <td>
                                             @if ($state == 'current')

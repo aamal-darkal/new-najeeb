@@ -48,7 +48,7 @@ class SettingsTableSeeder extends Seeder
             ['key' => 'min_count_days_before_relogin', 'value' => "5" , "description" => "The user is prohibited from login before this period has passed"],
             ['key' => 'reference_phone', 'value' => '+0997424043' , "description" => 'mobile number that appear in messages for solving problem'],
 
-
+            ['key' => 'otp-timeout-in-Minute', 'value' => '30' , "description" => 'one time Password timeout in miniute'],
         ];
 
         Setting::insert($data);

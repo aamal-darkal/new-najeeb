@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\StudentController;
 use App\Http\Controllers\Admin\SubjectController;
 use App\Http\Controllers\Admin\SubscriptionController;
+use App\Http\Controllers\ChapterController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -54,6 +55,8 @@ Route::middleware('auth','admin')->group(function () {
     Route::resource('subjects', SubjectController::class);
     Route::get('subjects-excel/{subject}', [SubjectController::class, 'excel'])->name('subjects.excel');
 
+    /***************************************  chapters *********************************/
+    Route::resource('chapters', ChapterController::class);
 
     /***************************************  lectures *********************************/
     Route::controller(LectureController::class)->group(function () {        

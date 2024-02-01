@@ -45,10 +45,10 @@
             <form method="POST" action="{{ route('login') }}">
                 @csrf
                 <div class="md-form-group float-label">
-                    <input type="text" class="md-input"  name="user_name" value="{{old('email')}}" ng-model="user.email" required>
+                    <input type="text" class="md-input"  name="mobile" value="{{old('mobile')}}" ng-model="user.mobile" required>
 
                     <label>User name</label>
-                    <x-input-error :messages="$errors->get('user_name')" class="mt-2" />
+                    <x-input-error :messages="$errors->get('mobile')" class="mt-2" />
                 </div>
                 <div class="md-form-group float-label">
                     <input type="password" class="md-input" name="password" ng-model="user.password" required>

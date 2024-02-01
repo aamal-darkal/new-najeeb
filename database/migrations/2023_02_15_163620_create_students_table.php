@@ -16,12 +16,10 @@ return new class extends Migration
             $table->string('first_name' , 50);
             $table->string('last_name' , 50);
             $table->string('father_name' , 50);            
-            $table->char('phone',10)->unique();
-            $table->char('land_line',10)->nullable();
             $table->char('parent_phone',10)->nullable();
-            $table->enum('governorate' ,['دمشق' ,'ريف دمشق' , 'حلب','حمص' ,'اللاذقية' , 'حماه'  ,'طرطوس', 'الرقة' ,'ديرالزور', 'السويداء' , 'الحسكة' , 'درعا' , 'إدلب' , 'القنيطرة'])->default('دمشق'); 
+            $table->enum('governorate' ,['دمشق' ,'ريف دمشق' , 'حلب','حمص' ,'اللاذقية' , 'حماه'  ,'طرطوس', 'الرقة' ,'ديرالزور', 'السويداء' , 'الحسكة' , 'درعا' , 'إدلب' , 'القنيطرة']); 
             $table->enum('state',['new','current','rejected','past','banned'])->default('new');
-            $table->foreignId('user_id')->nullable()->constrained();            
+            $table->foreignId('user_id')->constrained();            
             $table->timestamps();
         });
     }

@@ -22,6 +22,18 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::controller(AuthController::class)->group(function () {
+    // Route::get('user', "getUserInfo")->middleware('auth:sanctum');
+    // Route::get('my_payments', 'myPayments')->middleware('auth:sanctum');
+    // Route::post('reset-token', 'resetTokenDate')->middleware('auth:sanctum'); //for front developer
+
+    Route::post('register', [\App\Http\Controllers\Api\AuthController::class, 'registerStudent']);
+    Route::post('confirmOtp', [\App\Http\Controllers\Api\AuthController::class, 'confirmOtp']);
+    Route::post('resendOtp', [\App\Http\Controllers\Api\AuthController::class, 'resendOtp']);
+    Route::post('login', [\App\Http\Controllers\Api\AuthController::class, 'login']);
+});
+
+
 Route::get('my_public_classes', [\App\Http\Controllers\Api\PackageController::class, "getPublicSubjects"]);
 
 Route::middleware('auth:sanctum')->group(function () {
@@ -51,14 +63,7 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 
 
-Route::controller(AuthController::class)->group(function () {
-    Route::get('user', "getUserInfo")->middleware('auth:sanctum');
-    Route::get('my_payments', 'myPayments')->middleware('auth:sanctum');
-    Route::post('reset-token', 'resetTokenDate')->middleware('auth:sanctum'); //for front developer
 
-    Route::post('register', [\App\Http\Controllers\Api\AuthController::class, 'registerStudent']);
-    Route::post('login', [\App\Http\Controllers\Api\AuthController::class, 'login']);
-});
 
 
 Route::get('test/{p}', function ($p) {  

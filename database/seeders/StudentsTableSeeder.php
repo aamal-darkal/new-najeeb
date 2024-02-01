@@ -19,39 +19,37 @@ class StudentsTableSeeder extends Seeder
 
                 'first_name' => 'first',
                 'last_name' => 'student',
-                'phone' => '0937731517',
-                'land_line' => '8823568',
                 'father_name' => 'dad1',
                 'parent_phone' => '0937731517',
-                'governorate' => 1
-
+                'governorate' => 1,
+                'state' => 1,
+                'user_id' => 2
             ],
-            2=>
+            2 =>
             [
 
                 'first_name' => 'second',
                 'last_name' => 'student',
-                'phone' => '0935896587',
-                'land_line' => '9965874',
                 'father_name' => 'dad2',
                 'parent_phone' => '0935896587',
-                'governorate' => 2
+                'governorate' => 2,
+                'state' => 1,
+                'user_id' => 2
             ],
             3 =>
             [
 
                 'first_name' => 'third',
                 'last_name' => 'student',
-                'phone' => '0963269856',
-                'land_line' => '7758622',
                 'father_name' => 'dad3',
                 'parent_phone' => '0963269856',
-                'governorate' => 1
+                'governorate' => 1,
+                'state' => 1,
+                'user_id' => 2
             ],
         ];
-        foreach ($students as $student)
-        {
-            Student::create($student);
-        }
+
+        Student::insert($students);
     }
 }
+                

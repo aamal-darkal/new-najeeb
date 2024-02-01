@@ -13,7 +13,6 @@ class Subject extends Model
         'package_id',
         'name',
         'cost',
-        'color',
     ];
 
     public function package()
@@ -24,13 +23,10 @@ class Subject extends Model
     {
         return $this->belongsToMany(Student::class)->withTimestamps();
     }
-    public function weekProgs()
+
+    public function chapters()
     {
-        return $this->hasMany(WeekProgram::class);
-    }
-    public function lectures()
-    {
-        return $this->hasMany(Lecture::class);
+        return $this->hasMany(Chapter::class);
     }
     public function orders()
     {

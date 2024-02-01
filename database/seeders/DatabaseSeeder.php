@@ -19,7 +19,6 @@ class DatabaseSeeder extends Seeder
             StudentsTableSeeder::class,
             PackageTableSeeder::class,
             SubjectsTableSeeder::class,
-            WeekProgTableSeeder::class,
             LecturesTableSeeder::class,
             SettingsTableSeeder::class,
             PaymentMethodsSeeder::class

@@ -22,18 +22,15 @@ class StoreStudentRequest extends FormRequest
     public function rules(): array
     {   
         return [
+            'mobile' => ['required', 'unique:App\Models\User,mobile', 'digits:10'],
+            'password' => ['required', 'string', 'min:6'],
+
             'first_name' => ['required', 'string', 'max:50'],
             'last_name' => ['required', 'string', 'max:50'],
             'father_name' => ['required', 'string', 'max:50'] ,
-            'phone' => ['required','unique:App\Models\Student,phone' , 'digits:10'],
-            'land_line' => ['nullable',  'digits_between:7,10'],
-            'parent_phone' => ['nullable' , 'digits:10'],
-            'governorate' => ['nullable','string'],
-            'subjects_ids' => ['required', 'array'],
-            'subjects_ids.*' => ['required', 'exists:subjects,id'],
-            'amount' => ['required' ,'integer'],
-            'bill_number' => ['nullable' , 'digits_between:1,20'],
-            'payment_method_id' =>['nullable','exists:App\Models\PaymentMethod,id']
+            
+            'parent_phone' => ['nullable', 'digits:10'],
+            'governorate' => ['required', 'in:دمشق,ريف دمشق,حلب,حمص,اللاذقية,حماه,طرطوس,الرقة,ديرالزور,السويداء,الحسكة,درعا,إدلب,القنيطرة'], 
         ];
         
     }
