@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('temp_registers', function (Blueprint $table) {
             $table->id();
-            $table->char('mobile', 10)->unique();
+            $table->char('mobile', 10);
             $table->string('password');
             $table->string('first_name', 50);
             $table->string('last_name', 50);

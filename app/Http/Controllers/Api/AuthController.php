@@ -46,7 +46,7 @@ class AuthController extends Controller
         }
 
         /******* everything is OK *****/
-        return ResponseHelper::success(compact('mobile'), 'otp request successfully sended');
+        return ResponseHelper::success(compact('mobile' ,'otp'), 'otp request successfully sended');
     }
     /**
      * resendOtp to:
@@ -84,7 +84,7 @@ class AuthController extends Controller
         }
 
         /******* everything is OK *****/
-        return ResponseHelper::success(compact('mobile'), 'otp request successfully resended');
+        return ResponseHelper::success(compact('mobile','otp'), 'otp request successfully resended');
     }
     /**
      * confirmOtp using: 
