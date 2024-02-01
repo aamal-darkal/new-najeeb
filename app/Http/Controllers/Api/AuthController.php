@@ -145,10 +145,11 @@ class AuthController extends Controller
      */
     public function login(Request $request)
     {
+        // return $request;
         /******* check mobile & password *****/
         $data = $request->only('mobile', 'password');
         if (!Auth::attempt($data)) {
-            return response()->error($data, 'Login information is invalid.');
+            return ResponseHelper::error($data, 'Login information is invalid.');
         }
 
         $user = Auth::user();
