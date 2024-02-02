@@ -33,9 +33,10 @@ class AuthController extends Controller
     {
         /************ Adding temp register *****************/
         $otp = $this->generateRandomNO(6);
-        $request['otp'] = $otp;
-        $request['password'] = hash::make($request['password']);
-        $tempRegister = TempRegister::create($request->all());
+        $validated['otp'] = $otp;
+        $validated['password'] = hash::make($request['password']);
+
+        $tempRegister = TempRegister::create($request->validated());
         if (!$tempRegister) return ResponseHelper::error($request->all(), 'Error in register user');
 
         /****** sending otp *********************/
@@ -67,9 +68,8 @@ class AuthController extends Controller
             throw new HttpResponseException(
                 ResponseHelper::error($validator->errors(), "Error in validation", 422)
             );
-
-        $validated = $validator->valid();
-        $mobile = $validated['mobile'];
+            
+        $mobile = $request->mobile;
         
         /******* user has already account=> no need for otp *****/
         $userExist = User::where('mobile', $mobile)->first();
@@ -119,9 +119,9 @@ class AuthController extends Controller
             );
 
         //1-fetch record
-        $validated = $validator->valid();
-        $mobile = $validated['mobile'];
-        $otp = $validated['otp'];
+        //$validated = $validator->valid();
+        $mobile = $request->mobile;
+        $otp = $request->otp;
         $tempRegister = TempRegister::where('mobile', $mobile)
             ->where('otp', $otp)
             ->first();
@@ -182,7 +182,7 @@ class AuthController extends Controller
                 ResponseHelper::error($validator->errors(), "Error in validation", 422)
             );          
 
-        /******* check mobile & password *****/
+            /******* check mobile & password *****/
         $data = $request->only('mobile', 'password');
         if (!Auth::attempt($data)) {
             return ResponseHelper::error($data, 'mobile or password are not correct');
