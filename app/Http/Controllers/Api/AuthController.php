@@ -15,15 +15,17 @@ use App\Models\TempRegister;
 use App\Models\User;
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
     /**
      * registerStudent using
-     * request: mobile,password,first_name,last_name,father_name,parent_phone,governorate,otp
+     * request: mobile,password,first_name,last_name,father_name,parent_phone,governorate
      * @param StoreStudentRequest $request
      * @return void
      */
@@ -57,14 +59,22 @@ class AuthController extends Controller
      */
     function resendOtp(Request $request)
     {
-        $request->validate(['mobile' => ['required', 'digits:10']]);
+        $validator = Validator::make(
+            $request->all(),
+            ['mobile' => ['required', 'digits:10']]
+        );
+        if ($validator->fails())
+            throw new HttpResponseException(
+                ResponseHelper::error($validator->errors(), "Error in validation", 422)
+            );
 
-        $mobile = $request->mobile;
-
+        $validated = $validator->valid();
+        $mobile = $validated['mobile'];
+        
         /******* user has already account=> no need for otp *****/
         $userExist = User::where('mobile', $mobile)->first();
         if ($userExist)
-            return ResponseHelper::error(compact('mobile'), "$mobile has account no need for otp");
+            return ResponseHelper::error(compact('mobile'), "$mobile has account, no need for otp");
 
         /******* check if user register  *****/
         $tempRegister = TempRegister::where('mobile', $mobile)
@@ -96,14 +106,22 @@ class AuthController extends Controller
      */
     public function confirmOtp(Request $request)
     {
-        $request->validate([
-            'mobile' => ['required', 'digits:10'],
-            'otp' => ['required', 'digits:6'],
-        ]);
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'mobile' => ['required', 'digits:10'],
+                'otp' => ['required', 'digits:6'],
+            ]
+        );
+        if ($validator->fails())
+            throw new HttpResponseException(
+                ResponseHelper::error($validator->errors(), "Error in validation", 422)
+            );
 
         //1-fetch record
-        $mobile = $request->mobile;
-        $otp = $request->otp;
+        $validated = $validator->valid();
+        $mobile = $validated['mobile'];
+        $otp = $validated['otp'];
         $tempRegister = TempRegister::where('mobile', $mobile)
             ->where('otp', $otp)
             ->first();
@@ -152,15 +170,22 @@ class AuthController extends Controller
      */
     public function login(Request $request)
     {
-        $request->validate([
-            'mobile' => ['required', 'digits:10'],
-            'password' => ['required'],
-        ]);
-        // return $request;
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'mobile' => ['required', 'digits:10'],
+                'password' => ['required', 'min:6'],
+            ]
+        );
+        if ($validator->fails())
+            throw new HttpResponseException(
+                ResponseHelper::error($validator->errors(), "Error in validation", 422)
+            );          
+
         /******* check mobile & password *****/
         $data = $request->only('mobile', 'password');
         if (!Auth::attempt($data)) {
-            return ResponseHelper::error($data, 'Login information is invalid.');
+            return ResponseHelper::error($data, 'mobile or password are not correct');
         }
 
         $user = Auth::user();
@@ -185,7 +210,7 @@ class AuthController extends Controller
         $student = Student::where('user_id', $user->id)->first();
         $data = [
             'student_id' => $student->id,
-            'name' => $student->first_name . ' ' . $student->last_name,
+            'student_name' => $student->first_name . ' ' . $student->last_name,
             'token' => $token,
         ];
         return ResponseHelper::success($data, 'login successfully');

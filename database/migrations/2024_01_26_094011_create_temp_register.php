@@ -13,14 +13,16 @@ return new class extends Migration
     {
         Schema::create('temp_registers', function (Blueprint $table) {
             $table->id();
-            $table->char('mobile', 10);
+            $table->char('mobile', 10)->index();
             $table->string('password');
+
             $table->string('first_name', 50);
             $table->string('last_name', 50);
             $table->string('father_name', 50);
             $table->char('parent_phone', 10)->nullable();
             $table->enum('governorate', ['دمشق', 'ريف دمشق', 'حلب', 'حمص', 'اللاذقية', 'حماه', 'طرطوس', 'الرقة', 'ديرالزور', 'السويداء', 'الحسكة', 'درعا', 'إدلب', 'القنيطرة']);
-            $table->char('otp', 6);
+
+            $table->char('otp', 6)->index();
             $table->timestamps();
         });
     }

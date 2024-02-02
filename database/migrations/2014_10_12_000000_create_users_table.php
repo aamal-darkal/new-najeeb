@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->char('mobile', 10)->unique();            
             $table->string('password');
-            $table->enum('role' ,['temp' , 'admin' , 'student'])->default('temp');
+            $table->enum('role' ,['admin' , 'student'])->default('student');
             $table->dateTime('token_birth')->nullable();
             $table->string('fcm_token')->nullable();
             $table->rememberToken();

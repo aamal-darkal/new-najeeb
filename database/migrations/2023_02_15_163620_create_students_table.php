@@ -13,12 +13,12 @@ return new class extends Migration
     {
         Schema::create('students', function (Blueprint $table) {
             $table->id();
-            $table->string('first_name' , 50);
-            $table->string('last_name' , 50);
-            $table->string('father_name' , 50);            
+            $table->string('first_name' , 50)->index();
+            $table->string('last_name' , 50)->index();
+            $table->string('father_name' , 50)->index();            
             $table->char('parent_phone',10)->nullable();
-            $table->enum('governorate' ,['دمشق' ,'ريف دمشق' , 'حلب','حمص' ,'اللاذقية' , 'حماه'  ,'طرطوس', 'الرقة' ,'ديرالزور', 'السويداء' , 'الحسكة' , 'درعا' , 'إدلب' , 'القنيطرة']); 
-            $table->enum('state',['new','current','rejected','past','banned'])->default('new');
+            $table->enum('governorate' ,['دمشق' ,'ريف دمشق' , 'حلب','حمص' ,'اللاذقية' , 'حماه'  ,'طرطوس', 'الرقة' ,'ديرالزور', 'السويداء' , 'الحسكة' , 'درعا' , 'إدلب' , 'القنيطرة'])->index();
+            $table->enum('state',['new','current','past','banned'])->default('new')->index();
             $table->foreignId('user_id')->constrained();            
             $table->timestamps();
         });

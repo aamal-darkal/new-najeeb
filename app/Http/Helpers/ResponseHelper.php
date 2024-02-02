@@ -16,14 +16,13 @@ class ResponseHelper
                 'data' => $data,
             ]);
     }
-    public static function error($data, $message)
+    public static function error($data, $message , $code=400)
     {
         return response()->json(
             [
                 'status' => 'error',
                 'message' => $message,
                 'data' => $data,
-            ]
-        );
+            ], $code); //422:  Unprocessable Content        
     }
 }

@@ -2,7 +2,10 @@
 
 namespace App\Http\Requests;
 
+use App\Http\Helpers\ResponseHelper;
+use Illuminate\Contracts\Validation\Validator ;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class StoreStudentRequest extends FormRequest
 {
@@ -33,5 +36,11 @@ class StoreStudentRequest extends FormRequest
             'governorate' => ['required', 'in:دمشق,ريف دمشق,حلب,حمص,اللاذقية,حماه,طرطوس,الرقة,ديرالزور,السويداء,الحسكة,درعا,إدلب,القنيطرة'], 
         ];
         
+    }
+    protected function failedValidation(Validator $validator)
+    {
+        $data = $validator->errors();
+        throw new HttpResponseException(            
+            ResponseHelper::error($data, "Error in validation" , 422));
     }
 }
