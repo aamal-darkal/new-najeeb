@@ -46,7 +46,7 @@ class AuthController extends Controller
         }
 
         /******* everything is OK *****/
-        return ResponseHelper::success(compact('mobile' ,'otp'), 'otp request successfully sended');
+        return ResponseHelper::success(compact('mobile', 'otp'), 'otp request successfully sended');
     }
     /**
      * resendOtp to:
@@ -57,14 +57,16 @@ class AuthController extends Controller
      */
     function resendOtp(Request $request)
     {
+        $request->validate(['mobile' => ['required', 'digits:10']]);
+
         $mobile = $request->mobile;
-        
+
         /******* user has already account=> no need for otp *****/
-        $userExist = User::where('mobile' , $mobile)->first();
-        if($userExist)
+        $userExist = User::where('mobile', $mobile)->first();
+        if ($userExist)
             return ResponseHelper::error(compact('mobile'), "$mobile has account no need for otp");
 
-        /******* check if user register  *****/        
+        /******* check if user register  *****/
         $tempRegister = TempRegister::where('mobile', $mobile)
             ->latest()
             ->first();
@@ -84,7 +86,7 @@ class AuthController extends Controller
         }
 
         /******* everything is OK *****/
-        return ResponseHelper::success(compact('mobile','otp'), 'otp request successfully resended');
+        return ResponseHelper::success(compact('mobile', 'otp'), 'otp request successfully resended');
     }
     /**
      * confirmOtp using: 
@@ -94,6 +96,11 @@ class AuthController extends Controller
      */
     public function confirmOtp(Request $request)
     {
+        $request->validate([
+            'mobile' => ['required', 'digits:10'],
+            'otp' => ['required', 'digits:6'],
+        ]);
+
         //1-fetch record
         $mobile = $request->mobile;
         $otp = $request->otp;
@@ -145,6 +152,10 @@ class AuthController extends Controller
      */
     public function login(Request $request)
     {
+        $request->validate([
+            'mobile' => ['required', 'digits:10'],
+            'password' => ['required'],
+        ]);
         // return $request;
         /******* check mobile & password *****/
         $data = $request->only('mobile', 'password');
