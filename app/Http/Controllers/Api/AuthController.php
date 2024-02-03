@@ -32,24 +32,24 @@ class AuthController extends Controller
     public function registerStudent(StoreStudentRequest $request)
     {
         /************ Adding temp register *****************/
-        $otp = $this->generateRandomNO(6);
-        $validated['otp'] = $otp;
+        $validated = $request->validated();
         $validated['password'] = hash::make($request['password']);
+        $validated['otp'] = $this->generateRandomNO(6);
 
-        $tempRegister = TempRegister::create($request->validated());
+        $tempRegister = TempRegister::create($validated);
         if (!$tempRegister) return ResponseHelper::error($request->all(), 'Error in register user');
-
+        $data = [
+            'mobile' => $validated['mobile'],
+            'otp' => $validated['otp']
+        ];
         /****** sending otp *********************/
-        try {
-            $msg = "إدارة نجيب ترحب بك  " . $tempRegister->first_name . "\n الرمز : " . $otp;
-            $mobile = $tempRegister->mobile;
-            (new MessagingHelper)->sendMessage($msg, $mobile);
-        } catch (Exception $e) {
-            return ResponseHelper::error(['exception' => $e->getMessage()], 'Syriatel SMS API not working');
-        }
-
-        /******* everything is OK *****/
-        return ResponseHelper::success(compact('mobile', 'otp'), 'otp request successfully sended');
+        $msg = "إدارة نجيب ترحب بك  " . $tempRegister->first_name . "\n الرمز : " . $validated['otp'];
+        $mobile = $tempRegister->mobile;
+        $result = MessagingHelper::sendMessage($msg, $mobile);
+        if ($result == "200")
+            return ResponseHelper::success($data, 'otp successfully sent');
+        else
+            return ResponseHelper::error($data, 'Ops!!!!, otp is not sent, you can request resend otp');
     }
     /**
      * resendOtp to:
@@ -68,9 +68,9 @@ class AuthController extends Controller
             throw new HttpResponseException(
                 ResponseHelper::error($validator->errors(), "Error in validation", 422)
             );
-            
+
         $mobile = $request->mobile;
-        
+
         /******* user has already account=> no need for otp *****/
         $userExist = User::where('mobile', $mobile)->first();
         if ($userExist)
@@ -82,21 +82,18 @@ class AuthController extends Controller
             ->first();
 
         if (!$tempRegister)
-            return ResponseHelper::error(compact('mobile'), "$mobile not found in registered records");
+            return ResponseHelper::error(compact('mobile'), "$mobile not found in register records");
 
         $otp = $this->generateRandomNO(6);
         $tempRegister->update(['otp' => $otp]);
-
+        $data = compact('mobile', 'otp');
         /****** sending new otp *********************/
-        try {
-            $msg = "إدارة نجيب ترحب بك  " . $tempRegister->first_name . "\n الرمز : " . $otp;
-            (new MessagingHelper)->sendMessage($msg, $mobile);
-        } catch (Exception $e) {
-            return ResponseHelper::error(['exception' => $e->getMessage()], 'Syriatel SMS API not working');
-        }
-
-        /******* everything is OK *****/
-        return ResponseHelper::success(compact('mobile', 'otp'), 'otp request successfully resended');
+        $msg = "إدارة نجيب ترحب بك  " . $tempRegister->first_name . "\n الرمز : " . $otp;
+        $result = MessagingHelper::sendMessage($msg, $mobile);
+        if ($result)
+            return ResponseHelper::success($data, 'otp request successfully resended');
+        else
+            return ResponseHelper::error($data, 'Ops!!!!, otp is not sent, you can request resend otp again');
     }
     /**
      * confirmOtp using: 
@@ -180,9 +177,9 @@ class AuthController extends Controller
         if ($validator->fails())
             throw new HttpResponseException(
                 ResponseHelper::error($validator->errors(), "Error in validation", 422)
-            );          
+            );
 
-            /******* check mobile & password *****/
+        /******* check mobile & password *****/
         $data = $request->only('mobile', 'password');
         if (!Auth::attempt($data)) {
             return ResponseHelper::error($data, 'mobile or password are not correct');
