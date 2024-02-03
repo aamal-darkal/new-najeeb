@@ -23,6 +23,14 @@ class ResponseHelper
                 'status' => 'error',
                 'message' => $message,
                 'data' => $data,
-            ], $code); //422:  Unprocessable Content        
+            ], $code);
+        /***** 
+         * ******* 4xx client error *********
+         * 400 Bad Request
+         * 401 Unauthorized (authentication is required )
+         * 403 Forbidden (user does not has sufficient priviledge)
+         * 404 Not Found
+         * 422 Unprocessable Content  ()
+         * *******/      
     }
 }

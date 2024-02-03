@@ -24,15 +24,14 @@ use Illuminate\Support\Facades\Validator;
 class AuthController extends Controller
 {
     /**
-     * registerStudent using
-     * request: mobile,password,first_name,last_name,father_name,parent_phone,governorate
-     * @param StoreStudentRequest $request
+     * register Student 
+     * @param StoreStudentRequest $request: mobile,password,first_name,last_name,father_name,parent_phone,governorate
      * @return void
      */
     public function registerStudent(StoreStudentRequest $request)
     {
         /************ Adding temp register *****************/
-        $rec = $request->rec();
+        $rec = $request->validated();
         $rec['password'] = hash::make($request['password']);
         $rec['otp'] = $this->generateRandomNO(6);
 
@@ -53,9 +52,7 @@ class AuthController extends Controller
     }
     /**
      * resendOtp to:
-     * request: mobile
-     *
-     * @param [type] $request
+     * @param  Request $request:mobile
      * @return void
      */
     function resendOtp(Request $request)
@@ -96,9 +93,8 @@ class AuthController extends Controller
             return ResponseHelper::error($data, 'Ops!!!!, otp is not sent, you can request resend otp');
     }
     /**
-     * confirmOtp using: 
-     * request: mobile, otp
-     * @param Request $request
+     * confirmOtp
+     * @param Request $request: mobile, otp
      * @return void
      */
     public function confirmOtp(Request $request)
@@ -160,9 +156,7 @@ class AuthController extends Controller
 
     /**
      * login using 
-     * request: mobile , password
-     * in addition to request:fcm_token for firebase
-     * @param Request $request
+     * @param Request $request: mobile , password, fcm_token (for firebase)
      * @return void
      */
     public function login(Request $request)
