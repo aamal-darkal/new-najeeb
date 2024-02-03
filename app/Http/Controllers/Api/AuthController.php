@@ -32,21 +32,21 @@ class AuthController extends Controller
     public function registerStudent(StoreStudentRequest $request)
     {
         /************ Adding temp register *****************/
-        $validated = $request->validated();
-        $validated['password'] = hash::make($request['password']);
-        $validated['otp'] = $this->generateRandomNO(6);
+        $rec = $request->rec();
+        $rec['password'] = hash::make($request['password']);
+        $rec['otp'] = $this->generateRandomNO(6);
 
-        $tempRegister = TempRegister::create($validated);
-        if (!$tempRegister) return ResponseHelper::error($request->all(), 'Error in register user');
+        $tempRegister = TempRegister::create($rec);
+        if (!$tempRegister) return ResponseHelper::error($rec, 'Error in register user');
         $data = [
-            'mobile' => $validated['mobile'],
-            'otp' => $validated['otp']
+            'mobile' => $rec['mobile'],
+            'otp' => $rec['otp']
         ];
         /****** sending otp *********************/
-        $msg = "إدارة نجيب ترحب بك  " . $tempRegister->first_name . "\n الرمز : " . $validated['otp'];
+        $msg = "إدارة نجيب ترحب بك  " . $tempRegister->first_name . "\n الرمز : " . $rec['otp'];
         $mobile = $tempRegister->mobile;
         $result = MessagingHelper::sendMessage($msg, $mobile);
-        if ($result == "200")
+        if ($result)
             return ResponseHelper::success($data, 'otp successfully sent');
         else
             return ResponseHelper::error($data, 'Ops!!!!, otp is not sent, you can request resend otp');
@@ -91,9 +91,9 @@ class AuthController extends Controller
         $msg = "إدارة نجيب ترحب بك  " . $tempRegister->first_name . "\n الرمز : " . $otp;
         $result = MessagingHelper::sendMessage($msg, $mobile);
         if ($result)
-            return ResponseHelper::success($data, 'otp request successfully resended');
+            return ResponseHelper::success($data, 'otp request successfully resent');
         else
-            return ResponseHelper::error($data, 'Ops!!!!, otp is not sent, you can request resend otp again');
+            return ResponseHelper::error($data, 'Ops!!!!, otp is not sent, you can request resend otp');
     }
     /**
      * confirmOtp using: 
@@ -116,7 +116,6 @@ class AuthController extends Controller
             );
 
         //1-fetch record
-        //$validated = $validator->valid();
         $mobile = $request->mobile;
         $otp = $request->otp;
         $tempRegister = TempRegister::where('mobile', $mobile)
@@ -124,7 +123,7 @@ class AuthController extends Controller
             ->first();
 
         if (!$tempRegister)
-            return ResponseHelper::error(compact('mobile', 'otp'), 'not found');
+            return ResponseHelper::error(compact('mobile', 'otp'), 'information not found' , 404);
 
         //check otp age
         $otpTimeout = SettingsHelper::getSetting('otp-timeout-in-Minute');
@@ -134,14 +133,15 @@ class AuthController extends Controller
             return ResponseHelper::error(compact('otpAge', 'otpTimeout'), 'otp expire');
 
         /************ Adding User *****************/
-        $data = $tempRegister->only('mobile', 'password');
-        $user = User::create($data);
+        $rec = $tempRegister->only('mobile', 'password');
+        $user = User::create($rec);
 
-        if (!$user) return ResponseHelper::error($data, 'Error in Adding user');
+        if (!$user) return ResponseHelper::error($rec, 'Error in Adding user');
 
+        $data['user_id'] = $user->id;
         /************ Adding Student *****************/
         $tempRegister->user_id = $user->id;
-        $data = $tempRegister->only(
+        $rec = $tempRegister->only(
             "first_name",
             "last_name",
             "father_name",
@@ -149,13 +149,13 @@ class AuthController extends Controller
             "governorate",
             "user_id"
         );
-        $student = Student::create($data);
+        $student = Student::create($rec);
 
-        if (!$student) return ResponseHelper::error($data, 'Error in Adding student');
+        if (!$student) return ResponseHelper::error($rec, 'Error in Adding student');
 
         /******* everything is OK *****/
-        $data = ['user_id' => $user->id, 'student_id' => $student->id];
-        return ResponseHelper::success($data, 'otp Ok');
+        $data['student_id'] = $student->id;
+        return ResponseHelper::success($data, 'otp confirm Ok');
     }
 
     /**
@@ -210,7 +210,7 @@ class AuthController extends Controller
             'student_name' => $student->first_name . ' ' . $student->last_name,
             'token' => $token,
         ];
-        return ResponseHelper::success($data, 'login successfully');
+        return ResponseHelper::success($data, 'login is successfully done');
     }
 
     // public function getUserInfo(Request $request)
